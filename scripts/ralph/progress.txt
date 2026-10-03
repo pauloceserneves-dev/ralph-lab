@@ -13,3 +13,11 @@ Started: Fri Oct  2 21:23:07     2026
   - Saida: 423 entrada, 420 saida, 8120.00 descartado; total 931274.06
   - vendas_lojas.csv colunas: id_venda,data,id_loja,categoria,unidades,receita_brl,regiao,uf (data em YYYY-MM-DD -> mes = data[:7])
 ---
+## 2026-10-02 - US-002
+- Implementado pipeline/pivot.py (soma Decimal por regiao x mes, arredonda so na escrita com f"{v:.2f}") e tests/test_pivot.py
+- Files changed: pipeline/pivot.py, tests/test_pivot.py, pivot_receita.csv, scripts/ralph/prd.json
+- **Learnings for future iterations:**
+  - pivot_receita.csv: 4 regioes (Centro-Oeste, Nordeste, Sudeste, Sul) x 6 meses; Sudeste total 265077.49; Sul tem metade das vendas (60 vs 120)
+  - pivot.MESES lista os meses fixos; pivot.pivotar(linhas) retorna {regiao: {mes: Decimal}} reaproveitavel
+  - Testes de etapas posteriores devem chamar join.main() e pivot.main() antes (cada teste regenera sua cadeia)
+---
