@@ -1,0 +1,15 @@
+# Ralph Progress Log
+Started: Fri Oct  2 21:23:07     2026
+---
+## Codebase Patterns
+- Scripts ficam em `pipeline/` (pacote com __init__.py); paths resolvidos via `ROOT = Path(__file__).resolve().parent.parent`, entao rodam de qualquer cwd
+- Testes importam `from pipeline import X` (python -m pytest da raiz poe a raiz no sys.path) e chamam `X.main()` para regenerar o entregavel antes de verificar
+- Ler receita_brl com `Decimal(...)`; csv.DictReader/DictWriter da stdlib, encoding utf-8, newline=""
+---
+## 2026-10-02 - US-001
+- Implementado pipeline/join.py (inner join por id_loja, adiciona regiao e uf, grava vendas_lojas.csv) e tests/test_join.py
+- Files changed: pipeline/__init__.py, pipeline/join.py, tests/test_join.py, vendas_lojas.csv
+- **Learnings for future iterations:**
+  - Saida: 423 entrada, 420 saida, 8120.00 descartado; total 931274.06
+  - vendas_lojas.csv colunas: id_venda,data,id_loja,categoria,unidades,receita_brl,regiao,uf (data em YYYY-MM-DD -> mes = data[:7])
+---
