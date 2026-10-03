@@ -21,3 +21,13 @@ Started: Fri Oct  2 21:23:07     2026
   - pivot.MESES lista os meses fixos; pivot.pivotar(linhas) retorna {regiao: {mes: Decimal}} reaproveitavel
   - Testes de etapas posteriores devem chamar join.main() e pivot.main() antes (cada teste regenera sua cadeia)
 ---
+## 2026-10-02 - US-003
+- Implementado pipeline/web.py (le pivot_receita.csv, gera index.html com <svg> inline de linhas por regiao, legenda, eixos rotulados e um unico <p> de conclusao) e tests/test_web.py
+- Files changed: pipeline/web.py, tests/test_web.py, index.html, scripts/ralph/prd.json
+- **Learnings for future iterations:**
+  - lojas.csv colunas: id_loja,nome_loja,regiao,uf,gerente (loja 108 = Batel/PR, sem vendas)
+  - web.exclusoes() reaproveita join.inner_join para obter vendas orfas, receita descartada e lojas sem venda (nao hardcode)
+  - web.brl(Decimal) formata em R$ 1.234,56 para textos; CSVs continuam com ponto decimal
+  - Totais por regiao: Sudeste 265077.49 (lider), Nordeste 261862.76, Centro-Oeste 258323.97, Sul 146009.84
+  - Pagina deve ter exatamente um <p> (o teste usa regex <p>(.*?)</p>); nao adicionar outros <p> sem ajustar o teste
+---
