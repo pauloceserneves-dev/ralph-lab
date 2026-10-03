@@ -31,3 +31,10 @@ Started: Fri Oct  2 21:23:07     2026
   - Totais por regiao: Sudeste 265077.49 (lider), Nordeste 261862.76, Centro-Oeste 258323.97, Sul 146009.84
   - Pagina deve ter exatamente um <p> (o teste usa regex <p>(.*?)</p>); nao adicionar outros <p> sem ajustar o teste
 ---
+## 2026-10-02 - US-004
+- Implementado pipeline/run_all.py (roda join, pivot, web em sequencia; retorna os paths dos entregaveis), tests/test_run_all.py e README.md com decisoes de dados (inner join, 3 orfas id_loja=999 = R$ 8.120,00, loja 108 Batel/PR sem vendas)
+- Files changed: pipeline/run_all.py, tests/test_run_all.py, README.md, scripts/ralph/prd.json
+- **Learnings for future iterations:**
+  - `python -m pipeline.run_all` regenera tudo; saidas sao deterministicas (git status limpo apos rodar)
+  - Suite tem 4 testes (join, pivot, web, run_all)
+---
