@@ -1,0 +1,64 @@
+Starting Ralph - Tool: claude - Max iterations: 10
+
+===============================================================
+  Ralph Iteration 1 of 10 (claude)
+===============================================================
+US-001 (the inner join of `vendas.csv` with `lojas.csv`) is done and committed to `main` as `3b0cbba`. `python -m pytest -q` passes, with 1 test so far.
+
+- **Join:** `pipeline/join.py` matches sales to stores by `id_loja`, adds the `regiao` and `uf` columns, and writes `vendas_lojas.csv` to the repo root.
+- **Numbers:** it prints 423 rows in, 420 rows out and 8120.00 of revenue dropped. The three orphan sales with `id_loja=999` are excluded and store 108 doesn't appear. Total revenue in the output is 931274.06, as the story requires.
+- **Test:** `tests/test_join.py` regenerates the file, then checks for 420 rows, the 931274.06 total and the new columns.
+
+I also set `passes: true` for US-001 in `prd.json` and added a Codebase Patterns section plus a progress entry to `progress.txt`. That file was untracked before, so it's now committed too.
+
+Stories US-002 to US-004 still have `passes: false`, so the next iteration will pick up US-002 (the region × month revenue pivot).
+
+The Gmail, Google Calendar and Google Drive connectors need to be authorized in your claude.ai connector settings before they can be used. This story didn't need them.
+Iteration 1 complete. Continuing...
+
+===============================================================
+  Ralph Iteration 2 of 10 (claude)
+===============================================================
+US-002 (receita por região × mês) is finished and committed on `main` as `9e75ae8`. `python -m pytest -q` passes, with 2 tests.
+
+- **What it does:** `pipeline/pivot.py` reads `vendas_lojas.csv` and writes `pivot_receita.csv` to the repo root. The file has the exact header `regiao,2026-01,…,2026-06` and 4 rows of 7 columns: Centro-Oeste, Nordeste, Sudeste, Sul, in alphabetical order.
+- **Numbers:** All values are summed as `Decimal` and rounded to 2 decimal places only when written. The cells add up to 931274.06, and the Sudeste row adds up to 265077.49, both as required.
+- **Test:** `tests/test_pivot.py` regenerates the join and the pivot, then checks the header, the 4×7 shape, the region order, the 2-decimal format, the overall total and the Sudeste total.
+- **Bookkeeping:** I set US-002 to `passes: true` in `prd.json` and added this iteration's notes to `progress.txt`.
+
+Two stories are still open: US-003 (`index.html` with the chart and conclusion) and US-004 (a single command to rebuild everything, plus the README). The next iteration picks up US-003.
+Iteration 2 complete. Continuing...
+
+===============================================================
+  Ralph Iteration 3 of 10 (claude)
+===============================================================
+US-003 is done and committed to `main` as `3f46aa6`, and `python -m pytest -q` passes 3 tests. I didn't open `index.html` in a browser, so nobody has looked at the chart yet.
+
+- **Script:** `pipeline/web.py` reads `pivot_receita.csv` and writes `index.html` at the repo root. The page has an inline `<svg>` line chart with one line per region, a legend and labelled axes. It loads no scripts or external CSS.
+- **Conclusion paragraph:** it says Sudeste leads with R$ 265.077,49 (28.5% of the total). It gives the total revenue of R$ 931.274,06. It names the 3 sales (V00421–V00423) with `id_loja=999` that the inner join dropped, worth R$ 8.120,00, and says store 108 (Batel/PR) doesn't appear in the report. These figures are worked out from the source CSVs each time, not typed in, and `vendas.csv` and `lojas.csv` are unchanged.
+- **Test:** `tests/test_web.py` checks for the `<svg>`, that the conclusion is at least 300 characters long, and that it mentions the leader, the total and the exclusions. It expects exactly one `<p>` on the page, so adding another paragraph later means changing the test.
+
+I also set US-003 to `passes: true` in `prd.json` and added notes to `progress.txt`. US-004 (the `run_all.py` script and the README) is still open, so another iteration is needed.
+Iteration 3 complete. Continuing...
+
+===============================================================
+  Ralph Iteration 4 of 10 (claude)
+===============================================================
+US-004 (scripts and README) is finished and committed to `main` as `4a24888`. All four stories in the PRD are now marked done.
+
+- **`pipeline/run_all.py`** runs the join, pivot and web steps in order and regenerates `vendas_lojas.csv`, `pivot_receita.csv` and `index.html`. Run it with `python -m pipeline.run_all`. Running it again produces identical files.
+- **`tests/test_run_all.py`** is the new test. The full suite now has 4 tests and `python -m pytest -q` passes all of them.
+- **`README.md`** explains:
+  - why an inner join was used;
+  - the 3 sales with no store (V00421–V00423, store id 999), whose R$ 8.120,00 is left out of the report;
+  - why store 108 (Batel/PR) doesn't appear: it has no sales.
+- I recorded the progress in `progress.txt` and marked US-004 as passing in `prd.json`.
+
+`ralph-run.log` and `scripts/ralph/.last-branch` are files the Ralph runner creates, so I left them out of the commit.
+
+The Gmail, Google Calendar and Google Drive connectors need to be authorized in your claude.ai connector settings before they can be used. Nothing in this task needed them.
+
+<promise>COMPLETE</promise>
+
+Ralph completed all tasks!
+Completed at iteration 4 of 10
