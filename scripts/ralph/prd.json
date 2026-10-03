@@ -1,0 +1,70 @@
+{
+  "project": "ralph-lab",
+  "branchName": "main",
+  "description": "Pipeline de vendas em Python (stdlib) a partir de vendas.csv e lojas.csv na raiz do repo: inner join por id_loja salvo em vendas_lojas.csv, pivot regiao x mes em pivot_receita.csv e index.html com grafico SVG e paragrafo de conclusao. CRITERIO DE PRONTO GLOBAL: a suite inteira `python -m pytest -q` verde, com pelo menos 4 testes (linhas do join, receita total, forma do pivot, grafico na pagina). RESTRICOES: nao apagar nem editar linhas problematicas dos CSVs de origem (vendas.csv e lojas.csv ficam intactos); nao inventar dados; ler receita_brl como numero (Decimal), aceitando valores como 349.5 e 1200; trabalhar sempre no branch main; os tres entregaveis ficam na RAIZ do repo com esses nomes exatos.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Inner join de vendas com lojas",
+      "description": "Como analista, quero o inner join de vendas.csv com lojas.csv por id_loja para ter cada venda com sua regiao.",
+      "acceptanceCriteria": [
+        "pipeline/join.py le vendas.csv e lojas.csv da raiz e grava vendas_lojas.csv na raiz do repo",
+        "Inner join: as 3 vendas com id_loja=999 (V00421-V00423) ficam fora; a loja 108 nao aparece",
+        "A coluna receita_brl mantem exatamente esse nome; incluir colunas regiao e uf de lojas.csv",
+        "vendas_lojas.csv tem exatamente 420 linhas de dados e soma de receita_brl = 931274.06 (tolerancia 0.50)",
+        "O script imprime linhas de entrada (423), linhas de saida (420) e receita descartada (8120.00)",
+        "tests/test_join.py verifica 420 linhas e a receita total 931274.06",
+        "python -m pytest -q passa"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Pivot de receita regiao x mes",
+      "description": "Como gestor, quero a receita por regiao e mes para comparar o desempenho das regioes.",
+      "acceptanceCriteria": [
+        "pipeline/pivot.py le vendas_lojas.csv e grava pivot_receita.csv na raiz",
+        "Cabecalho exato: regiao,2026-01,2026-02,2026-03,2026-04,2026-05,2026-06",
+        "Exatamente 4 linhas de dados (Centro-Oeste, Nordeste, Sudeste, Sul, em ordem alfabetica) e 7 colunas",
+        "Valores com ponto decimal e 2 casas (ex.: 265077.49), sem R$ e sem separador de milhar; arredondar so na escrita",
+        "Soma de todas as celulas numericas = 931274.06 (tolerancia 0.50); linha Sudeste soma 265077.49",
+        "tests/test_pivot.py verifica cabecalho, forma 4x7 e total",
+        "python -m pytest -q passa"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Pagina index.html com grafico e conclusao",
+      "description": "Como leitor do relatorio, quero uma pagina estatica com o grafico da receita mensal por regiao e uma conclusao.",
+      "acceptanceCriteria": [
+        "pipeline/web.py le pivot_receita.csv e grava index.html na raiz",
+        "Grafico em <svg> inline com uma serie por regiao, legenda e eixos rotulados; sem scripts ou CSS externos",
+        "Um elemento <p> de conclusao com pelo menos 300 caracteres citando a regiao lider, a receita total e as exclusoes do inner join",
+        "tests/test_web.py verifica a presenca de <svg> e o tamanho do <p> de conclusao",
+        "python -m pytest -q passa"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Orquestracao e README",
+      "description": "Como mantenedor, quero um comando unico para regenerar tudo e um README que documente as decisoes sobre os dados.",
+      "acceptanceCriteria": [
+        "pipeline/run_all.py executa join, pivot e web em sequencia e regenera os tres entregaveis",
+        "README.md explica a escolha do inner join, as 3 vendas orfas com id_loja=999 (R$ 8.120,00 descartados) e a loja 108 (Batel/PR) ausente do relatorio",
+        "python -m pytest -q roda pelo menos 4 testes, todos verdes",
+        "Todos os entregaveis commitados no main"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
